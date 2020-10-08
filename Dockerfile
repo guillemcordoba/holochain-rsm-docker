@@ -19,7 +19,7 @@ ADD https://github.com/holochain/lair/archive/master.tar.gz /lair/master.tar.gz
 RUN tar --strip-components=1 -zxvf master.tar.gz
 RUN cd crates/lair_keystore && cargo install --path .
 
-FROM ubuntu
+FROM rust:1.45.2
 COPY --from=build /usr/local/cargo/bin/holochain /usr/local/cargo/bin/holochain
 COPY --from=build /usr/local/cargo/bin/dna-util /usr/local/cargo/bin/dna-util
 COPY --from=build /usr/local/cargo/bin/lair-keystore /usr/local/cargo/bin/lair-keystore
