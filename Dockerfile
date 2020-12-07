@@ -1,14 +1,12 @@
 FROM rust:1.45.2 as build
 
-RUN rustup target add wasm32-unknown-unknown
-
 RUN mkdir /holochain
 
 WORKDIR /holochain
-ARG DOCKER_BRANCH=develop
+ARG REVISION=develop
 
-ADD https://github.com/holochain/holochain/archive/$DOCKER_BRANCH.tar.gz /holochain/$DOCKER_BRANCH.tar.gz
-RUN tar --strip-components=1 -zxvf $DOCKER_BRANCH.tar.gz
+ADD https://github.com/holochain/holochain/archive/$REVISION.tar.gz /holochain/$REVISION.tar.gz
+RUN tar --strip-components=1 -zxvf $REVISION.tar.gz
 
 RUN cargo install --path crates/holochain
 RUN cargo install --path crates/dna_util
