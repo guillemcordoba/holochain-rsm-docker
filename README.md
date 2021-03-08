@@ -6,4 +6,4 @@ To build an image targeting a specific git commit of the [holochain repository](
 REVISION=cac00d4 docker build . -t guillemcordoba/rsm:cac00d4
 ```
 
-The image is published [here](https://hub.docker.com/repository/docker/guillemcordoba/rsm/), tagged with the git commit hash (short version).
+The image is published [here](https://hub.docker.com/r/guillemcordoba/rsm/tags), tagged with the git commit hash (short version).
