@@ -1,24 +1,18 @@
-FROM rust:1.48.0 as build
+FROM rust:1.50.0 as build
 
-RUN mkdir /holochain
+ARG REVISION=9a7219e
 
-WORKDIR /holochain
-ARG REVISION=develop
+RUN apt-get update && apt-get install build-essential
 
-ADD https://github.com/holochain/holochain/archive/$REVISION.tar.gz /holochain/$REVISION.tar.gz
-RUN tar --strip-components=1 -zxvf $REVISION.tar.gz
+RUN cargo install --git https://github.com/holochain/holochain --rev ${REVISION} holochain
+RUN cargo install --git https://github.com/holochain/holochain --rev ${REVISION} holochain_cli
 
-RUN cargo install --path crates/holochain
-
-RUN mkdir /lair
-WORKDIR /lair
-ADD https://github.com/holochain/lair/archive/master.tar.gz /lair/master.tar.gz
-RUN tar --strip-components=1 -zxvf master.tar.gz
-RUN cd crates/lair_keystore && cargo install --path .
+RUN cargo install --version 0.0.1-alpha.11 lair_keystore 
 
 FROM ubuntu
 COPY --from=build /usr/local/cargo/bin/holochain /usr/local/bin/holochain
 COPY --from=build /usr/local/cargo/bin/lair-keystore /usr/local/bin/lair-keystore
+COPY --from=build /usr/local/cargo/bin/hc /usr/local/bin/hc
 ENV PATH="/usr/local/bin:${PATH}"
 
-RUN apt-get update && apt-get install -y socat
+RUN apt-get update && apt-get install -y socat libssl-dev ca-certificates
